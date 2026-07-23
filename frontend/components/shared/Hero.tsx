@@ -1,3 +1,5 @@
+import Button from "../ui/Button";
+
 export default function Hero() {
   return (
     <section className="mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-6 text-center">
@@ -22,9 +24,9 @@ export default function Hero() {
 
       <div className="mt-12 flex gap-4">
 
-        <button className="rounded-xl bg-white px-6 py-3 font-semibold text-black transition hover:scale-105">
-          Get Started
-        </button>
+        <Button>
+            Get Started
+        </Button>
 
         <button className="rounded-xl border border-zinc-700 px-6 py-3 transition hover:border-zinc-500">
           GitHub
