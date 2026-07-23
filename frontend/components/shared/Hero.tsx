@@ -28,9 +28,9 @@ export default function Hero() {
             Get Started
         </Button>
 
-        <button className="rounded-xl border border-zinc-700 px-6 py-3 transition hover:border-zinc-500">
+        <Button variant="secondary">
           GitHub
-        </button>
+        </Button>
 
       </div>
 
