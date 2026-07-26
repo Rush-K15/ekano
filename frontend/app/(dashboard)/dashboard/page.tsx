@@ -1,3 +1,5 @@
+import Welcome from "@/components/dashboard/Welcome";
+
 export default function DashboardPage() {
-    return <h1>Dashboard</h1>;
+    return <Welcome />;
 }

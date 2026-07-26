@@ -1,15 +1,26 @@
+import type { ReactNode } from "react";
+
+import Sidebar from "@/components/dashboard/Sidebar";
+import Topbar from "@/components/dashboard/Topbar";
+
+interface DashboardLayoutProps {
+    children: ReactNode;
+}
+
 export default function DashboardLayout({
     children,
-}: {
-    children: React.ReactNode;
-}) {
+}: DashboardLayoutProps) {
     return (
-        <div className="min-h-screen bg-zinc-950 text-white">
-            <aside className="border-b border-zinc-800 p-6">
-                Dashboard Layout
-            </aside>
+        <div className="flex min-h-screen bg-zinc-950 text-white">
+            <Sidebar />
 
-            <main>{children}</main>
+            <div className="flex flex-1 flex-col">
+                <Topbar />
+
+                <main className="flex-1 p-8">
+                    {children}
+                </main>
+            </div>
         </div>
     );
-} 
+}
