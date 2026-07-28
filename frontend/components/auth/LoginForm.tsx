@@ -1,21 +1,34 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function LoginForm() {
+    const { login, loading } = useAuth();
 
-    const {
-        email,
-        password,
-        setEmail,
-        setPassword,
-        handleSubmit,
-        loading
-    } = useAuth();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+
+    const handleSubmit = async (
+        e: React.FormEvent<HTMLFormElement>
+    ) => {
+        e.preventDefault();
+
+        try {
+            setError("");
+
+            await login(email, password);
+
+        } catch {
+            setError("Invalid email or password.");
+        }
+    };
 
     return (
         <Card>
@@ -55,8 +68,17 @@ export default function LoginForm() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
 
-                    <Button className="w-full" type="submit">
-                        {loading ? "Signing In..." : "Sign-In"}
+                    {error && (
+                        <p className="text-sm text-red-400">
+                            {error}
+                        </p>
+                    )}
+
+                    <Button
+                        className="w-full"
+                        type="submit"
+                    >
+                        {loading ? "Signing In..." : "Sign In"}
                     </Button>
                 </form>
 
