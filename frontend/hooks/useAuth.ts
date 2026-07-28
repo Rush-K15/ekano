@@ -19,8 +19,10 @@ export function useAuth() {
         setLoading(true);
 
         try {
-            await login(email, password);
-            router.push("/dashboard")
+            const user = await login(email, password);
+            // router.push("/dashboard")
+            console.log(user);
+            
         } finally {
             setLoading(false);
         }
