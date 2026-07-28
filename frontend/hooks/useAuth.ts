@@ -1,33 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { login as loginService } from "@/services/auth";
-import { useRouter } from "next/navigation";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
 
 export function useAuth() {
-    const router = useRouter();
-    const [loading, setLoading] = useState(false);
+    const context = useContext(AuthContext);
 
-    const login = async (
-        email: string,
-        password: string
-    ) => {
-        setLoading(true);
+    if (!context) {
+        throw new Error(
+            "useAuth must be used within an AuthProvider"
+        );
+    }
 
-        try {
-            const user = await loginService(email, password);
-
-            console.log(user);
-
-
-            return user;
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return {
-        login,
-        loading,
-    };
+    return context;
 }

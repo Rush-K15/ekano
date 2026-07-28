@@ -7,8 +7,11 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+
 
 export default function LoginForm() {
+    const router = useRouter();
     const { login, loading } = useAuth();
 
     const [email, setEmail] = useState("");
@@ -24,6 +27,7 @@ export default function LoginForm() {
             setError("");
 
             await login(email, password);
+            router.push("/dashboard");
 
         } catch {
             setError("Invalid email or password.");
