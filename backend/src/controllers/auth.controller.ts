@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import type { LoginRequest } from "../types/auth.types.js";
 
 import * as authService from "../services/auth.service.js";
+import { generateAccessToken } from "../utils/jwt.js";
 
 export async function login(
     request: Request<{}, {}, LoginRequest>,
@@ -17,6 +18,15 @@ export async function login(
             message: "Invalid email or password",
         });
     }
+
+    const accessToken = generateAccessToken(user.id);
+    
+    response.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 24 * 60 * 60 * 1000,
+});
 
     return response.status(200).json(user);
 }
