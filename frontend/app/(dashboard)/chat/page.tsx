@@ -1,9 +1,10 @@
 "use client";
-
 import { useState } from "react";
 
 import ChatWindow from "@/components/dashboard/ChatWindow";
 import MessageInput from "@/components/dashboard/MessageInput";
+
+import { sendMessage } from "@/services/chat";
 
 import type { Message } from "@/types/chat";
 
@@ -17,36 +18,56 @@ export default function ChatPage() {
         {
             id: "2",
             role: "assistant",
-            content:
-                "You can deploy a Next.js application using Vercel.",
+            content: "You can deploy a Next.js application using Vercel.",
         },
     ]);
 
-    const handleSend = (content: string) => {
-        const newMessage: Message = {
+    async function handleSend(content: string) {
+        // Create the user's message
+        const userMessage: Message = {
             id: crypto.randomUUID(),
             role: "user",
             content,
         };
 
+        // Show it immediately
         setMessages((previousMessages) => [
             ...previousMessages,
-            newMessage,
+            userMessage,
         ]);
-        setTimeout(() => {
+
+        try {
+            // Call the backend
+            const response = await sendMessage(content);
+
+            // Create Ekano's reply
             const assistantMessage: Message = {
                 id: crypto.randomUUID(),
                 role: "assistant",
-                content:
-                    "I'm Ekano. Soon I'll answer using your enterprise knowledge base!",
+                content: response,
             };
 
+            // Show the AI response
             setMessages((previousMessages) => [
                 ...previousMessages,
                 assistantMessage,
             ]);
-        }, 800);
-    };
+        } catch (error) {
+            console.error(error);
+
+            const errorMessage: Message = {
+                id: crypto.randomUUID(),
+                role: "assistant",
+                content:
+                    "Sorry, something went wrong. Please try again.",
+            };
+
+            setMessages((previousMessages) => [
+                ...previousMessages,
+                errorMessage,
+            ]);
+        }
+    }
 
     return (
         <div className="flex h-full flex-col">
