@@ -3,6 +3,7 @@ import healthRoutes from "./routes/health.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import chatRoutes from "./routes/chat.routes.js";
 
 const app = express();
 app.use(
@@ -21,5 +22,6 @@ app.use(cookieParser());
 
 app.use("/health", healthRoutes);
 app.use("/auth", authRoutes);
+app.use("/chat", chatRoutes);
 
 export default app;
