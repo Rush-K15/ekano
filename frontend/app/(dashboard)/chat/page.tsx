@@ -33,6 +33,19 @@ export default function ChatPage() {
             ...previousMessages,
             newMessage,
         ]);
+        setTimeout(() => {
+            const assistantMessage: Message = {
+                id: crypto.randomUUID(),
+                role: "assistant",
+                content:
+                    "I'm Ekano. Soon I'll answer using your enterprise knowledge base!",
+            };
+
+            setMessages((previousMessages) => [
+                ...previousMessages,
+                assistantMessage,
+            ]);
+        }, 800);
     };
 
     return (

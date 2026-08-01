@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+
 import Button from "@/components/ui/Button";
+import AutoResizeTextarea from "@/components/ui/AutoResizeTextarea";
 
 type MessageInputProps = {
     onSend: (message: string) => void;
@@ -10,6 +12,7 @@ type MessageInputProps = {
 export default function MessageInput({
     onSend,
 }: MessageInputProps) {
+    
     const [input, setInput] = useState("");
 
     function handleSend() {
@@ -22,16 +25,32 @@ export default function MessageInput({
         setInput("");
     }
 
+    
+
+    function handleKeyDown(
+        event: React.KeyboardEvent<HTMLTextAreaElement>
+    ) {
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+            event.preventDefault();
+
+            handleSend();
+        }
+    }
+
     return (
         <div className="border-t border-zinc-800 p-4">
-            <div className="flex gap-3">
-                <input
-                    className="flex-1 rounded-lg bg-zinc-900 px-4 py-3 text-white outline-none"
+            <div className="flex items-end gap-3">
+                <AutoResizeTextarea
                     value={input}
-                    onChange={(e) =>
-                        setInput(e.target.value)
+                    onChange={(event) =>
+                        setInput(event.target.value)
                     }
+                    onKeyDown={handleKeyDown}
                     placeholder="Ask Ekano anything..."
+                    className="flex-1 rounded-lg bg-zinc-900 px-4 py-3 text-white outline-none"
                 />
 
                 <Button onClick={handleSend}>
