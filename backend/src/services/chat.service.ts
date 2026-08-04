@@ -1,19 +1,14 @@
 import ai from "../lib/ai.js";
+import { Message } from "../types/chat.types.js";
 
 export async function generateResponse(
-    message: string
+    messages: Message[]
 ): Promise<string> {
     const completion =
         await ai.chat.completions.create({
             model:
                 "google/gemma-4-26b-a4b-it:free",
-
-            messages: [
-                {
-                    role: "user",
-                    content: message,
-                },
-            ],
+                messages
         });
 
     return (

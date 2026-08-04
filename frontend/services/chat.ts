@@ -1,19 +1,20 @@
 import api from "../lib/api";
+import type { Message } from "@/types/chat";
 
 type ChatResponse = {
     response: string;
 };
 
 export async function sendMessage(
-    message: string
+    messages: Message[]
 ): Promise<string> {
-    const { data } =
+    const response =
         await api.post<ChatResponse>(
             "/chat",
             {
-                message,
+                messages,
             }
         );
 
-    return data.response;
+    return response.data.response;
 }

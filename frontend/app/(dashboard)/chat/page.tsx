@@ -10,18 +10,7 @@ import type { Message } from "@/types/chat";
 
 export default function ChatPage() {
     const [isGenerating, setIsGenerating] = useState(false);
-    const [messages, setMessages] = useState<Message[]>([
-        {
-            id: "1",
-            role: "user",
-            content: "How do I deploy Next.js?",
-        },
-        {
-            id: "2",
-            role: "assistant",
-            content: "You can deploy a Next.js application using Vercel.",
-        },
-    ]);
+    const [messages, setMessages] = useState<Message[]>([]);
 
     async function handleSend(content: string) {
         setIsGenerating(true);
@@ -42,14 +31,18 @@ export default function ChatPage() {
         };
 
         // Show both immediately
-        setMessages((previousMessages) => [
-            ...previousMessages,
+        const updatedMessages = [
+            ...messages,
             userMessage,
+        ];
+
+        setMessages([
+            ...updatedMessages,
             assistantPlaceholder,
         ]);
 
         try {
-            const response = await sendMessage(content);
+            const response = await sendMessage(updatedMessages);
 
             setMessages((previousMessages) =>
                 previousMessages.map((message) => {

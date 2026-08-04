@@ -1,36 +1,22 @@
-import type {
-    Request,
-    Response,
-} from "express";
+import type { Request, Response } from "express";
+import type { Message } from "../types/chat.types.js";
 
 import { generateResponse } from "../services/chat.service.js";
 
 type ChatRequest = {
-    message: string;
+    messages: Message[];
 };
 
 export async function sendMessage(
-    request: Request<
-        {},
-        {},
-        ChatRequest
-    >,
+    request: Request<{}, {}, ChatRequest>,
     response: Response
 ) {
-    try {
-        const { message } = request.body;
+    const { messages } = request.body;
 
-        const aiResponse =
-            await generateResponse(message);
+    const aiResponse =
+        await generateResponse(messages);
 
-        response.status(200).json({
-            response: aiResponse,
-        });
-    } catch (error) {
-        console.error(error);
-
-        response.status(500).json({
-            message: "Failed to generate AI response.",
-        });
-    }
+    response.status(200).json({
+        response: aiResponse,
+    });
 }
