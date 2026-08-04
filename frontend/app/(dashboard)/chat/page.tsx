@@ -9,6 +9,7 @@ import { sendMessage } from "@/services/chat";
 import type { Message } from "@/types/chat";
 
 export default function ChatPage() {
+    const [isGenerating, setIsGenerating] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
         {
             id: "1",
@@ -23,57 +24,74 @@ export default function ChatPage() {
     ]);
 
     async function handleSend(content: string) {
-        // Create the user's message
+        setIsGenerating(true);
+
+        // User message
         const userMessage: Message = {
             id: crypto.randomUUID(),
             role: "user",
             content,
         };
 
-        // Show it immediately
+        // Placeholder message
+        const assistantPlaceholder: Message = {
+            id: crypto.randomUUID(),
+            role: "assistant",
+            content: "Thinking...",
+            isLoading: true,
+        };
+
+        // Show both immediately
         setMessages((previousMessages) => [
             ...previousMessages,
             userMessage,
+            assistantPlaceholder,
         ]);
 
         try {
-            // Call the backend
             const response = await sendMessage(content);
 
-            // Create Ekano's reply
-            const assistantMessage: Message = {
-                id: crypto.randomUUID(),
-                role: "assistant",
-                content: response,
-            };
+            setMessages((previousMessages) =>
+                previousMessages.map((message) => {
+                    if (message.id !== assistantPlaceholder.id) {
+                        return message;
+                    }
 
-            // Show the AI response
-            setMessages((previousMessages) => [
-                ...previousMessages,
-                assistantMessage,
-            ]);
+                    return {
+                        ...message,
+                        content: response,
+                        isLoading: false,
+                    };
+                })
+            );
         } catch (error) {
             console.error(error);
 
-            const errorMessage: Message = {
-                id: crypto.randomUUID(),
-                role: "assistant",
-                content:
-                    "Sorry, something went wrong. Please try again.",
-            };
+            setMessages((previousMessages) =>
+                previousMessages.map((message) => {
+                    if (message.id !== assistantPlaceholder.id) {
+                        return message;
+                    }
 
-            setMessages((previousMessages) => [
-                ...previousMessages,
-                errorMessage,
-            ]);
+                    return {
+                        ...message,
+                        content:
+                            "Sorry, something went wrong. Please try again.",
+                        isLoading: false,
+                    };
+                })
+            );
+        } finally {
+            setIsGenerating(false);
         }
+
     }
 
     return (
         <div className="flex h-full flex-col">
             <ChatWindow messages={messages} />
 
-            <MessageInput onSend={handleSend} />
+            <MessageInput onSend={handleSend} isGenerating={isGenerating} />
         </div>
     );
 }

@@ -7,12 +7,13 @@ import AutoResizeTextarea from "@/components/ui/AutoResizeTextarea";
 
 type MessageInputProps = {
     onSend: (message: string) => void;
+    isGenerating: boolean
 };
 
 export default function MessageInput({
-    onSend,
+    onSend, isGenerating
 }: MessageInputProps) {
-    
+
     const [input, setInput] = useState("");
 
     function handleSend() {
@@ -25,7 +26,7 @@ export default function MessageInput({
         setInput("");
     }
 
-    
+
 
     function handleKeyDown(
         event: React.KeyboardEvent<HTMLTextAreaElement>
@@ -53,7 +54,10 @@ export default function MessageInput({
                     className="flex-1 rounded-lg bg-zinc-900 px-4 py-3 text-white outline-none"
                 />
 
-                <Button onClick={handleSend}>
+                <Button
+                    onClick={handleSend}
+                    disabled={isGenerating}
+                >
                     Send
                 </Button>
             </div>

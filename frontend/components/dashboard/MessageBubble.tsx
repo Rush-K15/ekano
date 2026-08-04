@@ -1,4 +1,5 @@
 import type { Message } from "@/types/chat";
+import TypingIndicator from "./TypingIndicator";
 
 type MessageBubbleProps = {
     message: Message;
@@ -11,9 +12,8 @@ export default function MessageBubble({
 
     return (
         <div
-            className={`flex mb-4 ${
-                isUser ? "justify-end" : "justify-start"
-            }`}
+            className={`flex mb-4 ${isUser ? "justify-end" : "justify-start"
+                }`}
         >
             <div className="max-w-[70%]">
                 {!isUser && (
@@ -23,13 +23,17 @@ export default function MessageBubble({
                 )}
 
                 <div
-                    className={`rounded-2xl px-4 py-3 ${
-                        isUser
+                    className={`rounded-2xl px-4 py-3 ${isUser
                             ? "bg-white text-black"
                             : "bg-zinc-800 text-white"
-                    }`}
+                        }`}
                 >
-                    {message.content}
+                    {message.isLoading ? (
+                        <TypingIndicator />
+                    ) : (
+                        message.content
+                    )}
+
                 </div>
             </div>
         </div>
