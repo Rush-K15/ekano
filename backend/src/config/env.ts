@@ -2,4 +2,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-console.log("Loaded env:", !!process.env.OPENROUTER_API_KEY);
+export const env = {
+  openRouterApiKey: process.env.OPENROUTER_API_KEY!,
+  databaseUrl: process.env.DATABASE_URL!,
+  jwtSecret: process.env.JWT_SECRET!,
+};

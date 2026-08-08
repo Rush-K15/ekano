@@ -7,10 +7,11 @@ type CreateDocumentRequest = {
   content: string;
 };
 
-export function createDocument(
+export async function createDocument(
   request: Request<{}, {}, CreateDocumentRequest>,
   response: Response,
 ) {
+  console.log("POST /documents HIT");
   const { title, content } = request.body;
 
   if (!title || !content) {
@@ -21,7 +22,7 @@ export function createDocument(
     return;
   }
 
-  const document = addDocument(title, content);
+  const document = await addDocument(title, content);
 
   response.status(201).json({
     document,

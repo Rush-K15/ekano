@@ -2,23 +2,18 @@ import ai from "../lib/ai.js";
 import type { Message } from "../types/chat.types.js";
 import { retrieveKnowledge } from "./retriever.service.js";
 
-export async function generateResponse(
-    messages: Message[]
-): Promise<string> {
-    const latestMessage =
-        messages[messages.length - 1];
+export async function generateResponse(messages: Message[]): Promise<string> {
+  const latestMessage = messages[messages.length - 1];
 
-    const context =
-        retrieveKnowledge(latestMessage.content);
+  const context = await retrieveKnowledge(latestMessage.content);
 
-    const completion =
-        await ai.chat.completions.create({
-            model: "google/gemma-4-26b-a4b-it:free",
+  const completion = await ai.chat.completions.create({
+    model: "google/gemma-4-26b-a4b-it:free",
 
-            messages: [
-                {
-                    role: "system",
-                    content: `
+    messages: [
+      {
+        role: "system",
+        content: `
 You are Ekano, an Enterprise Knowledge Assistant.
 
 Answer using the company knowledge whenever it is relevant.
@@ -29,14 +24,13 @@ Company Knowledge:
 
 ${context || "No relevant company knowledge found."}
 `,
-                },
+      },
 
-                ...messages,
-            ],
-        });
+      ...messages,
+    ],
+  });
 
-    return (
-        completion.choices[0].message.content ??
-        "I couldn't generate a response."
-    );
+  return (
+    completion.choices[0].message.content ?? "I couldn't generate a response."
+  );
 }

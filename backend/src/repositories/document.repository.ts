@@ -1,16 +1,55 @@
+import { pool } from "../config/database.js";
 import type { Document } from "../types/document.types.js";
-import { companyKnowledge } from "../knowledge/company.js";
 
-export function getAllDocuments(): Document[] {
-  return companyKnowledge;
+export async function getAllDocuments(): Promise<Document[]> {
+  const result = await pool.query(
+    `
+        SELECT
+            id,
+            title,
+            content
+        FROM documents
+        ORDER BY created_at ASC
+        `,
+  );
+
+  return result.rows;
 }
 
-export function getDocumentById(id: string): Document | undefined {
-  return companyKnowledge.find((document) => document.id === id);
+export async function getDocumentById(
+  id: string,
+): Promise<Document | undefined> {
+  const result = await pool.query(
+    `
+        SELECT
+            id,
+            title,
+            content
+        FROM documents
+        WHERE id = $1
+        `,
+    [id],
+  );
+
+  return result.rows[0];
 }
 
-export function createDocument(document: Document): Document {
-  companyKnowledge.push(document);
+export async function createDocument(document: Document): Promise<Document> {
+  const result = await pool.query(
+    `
+        INSERT INTO documents (
+            id,
+            title,
+            content
+        )
+        VALUES ($1, $2, $3)
+        RETURNING
+            id,
+            title,
+            content
+        `,
+    [document.id, document.title, document.content],
+  );
 
-  return document;
+  return result.rows[0];
 }

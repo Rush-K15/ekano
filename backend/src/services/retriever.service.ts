@@ -1,17 +1,19 @@
 import { getAllDocuments } from "../repositories/document.repository.js";
 
-export function retrieveKnowledge(query: string): string {
+export async function retrieveKnowledge(query: string): Promise<string> {
   const queryWords = query
     .toLowerCase()
     .split(/\s+/)
     .filter((word) => word.length > 2);
 
-  const rankedDocuments = getAllDocuments()
+  const documents = await getAllDocuments();
+
+  const rankedDocuments = documents
     .map((document) => {
       const searchableText = `
-                    ${document.title}
-                    ${document.content}
-                `.toLowerCase();
+                ${document.title}
+                ${document.content}
+            `.toLowerCase();
 
       const score = queryWords.reduce((total, word) => {
         if (searchableText.includes(word)) {
