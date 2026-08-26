@@ -1,14 +1,18 @@
 import ai from "../lib/ai.js";
-import type { Message } from "../types/chat.types.js";
+import { Message } from "../types/chat.types.js";
 import { retrieveKnowledge } from "./retriever.service.js";
 
 export async function generateResponse(messages: Message[]): Promise<string> {
+  if (messages.length === 0) {
+    throw new Error("At least one message is required.");
+  }
+
   const latestMessage = messages[messages.length - 1];
 
   const context = await retrieveKnowledge(latestMessage.content);
 
   const completion = await ai.chat.completions.create({
-    model: "google/gemma-4-26b-a4b-it:free",
+    model: "nvidia/nemotron-3.5-lightning:free",
 
     messages: [
       {
@@ -31,6 +35,6 @@ ${context || "No relevant company knowledge found."}
   });
 
   return (
-    completion.choices[0].message.content ?? "I couldn't generate a response."
+    completion.choices[0]?.message?.content ?? "I couldn't generate a response."
   );
 }
