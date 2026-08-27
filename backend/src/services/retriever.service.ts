@@ -1,14 +1,15 @@
 import { searchSimilarChunks } from "../repositories/document-chunk.repository.js";
 import { createEmbedding } from "./embedding.service.js";
 
-export async function retrieveKnowledge(query: string): Promise<string> {
+const TOP_K = 3;
+const MAX_COSINE_DISTANCE = 0.65;
+
+export async function retrieveKnowledge(query: string) {
   const queryEmbedding = await createEmbedding(query);
 
-  const chunks = await searchSimilarChunks(queryEmbedding, 3);
+  const chunks = await searchSimilarChunks(queryEmbedding, TOP_K);
 
-  if (chunks.length === 0) {
-    return "";
-  }
-
-  return chunks.map((chunk) => `${chunk.content}`).join("\n\n");
+  return chunks.filter(
+    (chunk) => Number(chunk.distance) <= MAX_COSINE_DISTANCE,
+  );
 }
