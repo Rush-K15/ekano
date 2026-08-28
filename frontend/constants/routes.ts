@@ -1,12 +1,8 @@
 export const PROTECTED_ROUTES = [
-    "/dashboard",
-    "/chat",
-    "/knowledge",
-    "/settings",
+  "/dashboard",
+  "/chat",
+  "/knowledge-base",
+  "/settings",
 ];
 
-export const AUTH_ROUTES = [
-    "/login",
-    "/register",
-    "/forgot-password",
-];
+export const AUTH_ROUTES = ["/login", "/register", "/forgot-password"];
