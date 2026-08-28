@@ -2,7 +2,7 @@ import ai from "../lib/ai.js";
 import type { Message } from "../types/chat.types.js";
 import { retrieveKnowledge } from "./retriever.service.js";
 
-export async function generateResponse(messages: Message[]): Promise<string> {
+export async function generateResponse(messages: Message[]) {
   if (messages.length === 0) {
     throw new Error("At least one message is required.");
   }
@@ -41,12 +41,18 @@ Company Knowledge:
 ${context || "No relevant company knowledge found."}
 `,
       },
-
       ...messages,
     ],
   });
 
-  return (
-    completion.choices[0]?.message?.content ?? "I couldn't generate a response."
-  );
+  return {
+    response:
+      completion.choices[0]?.message?.content ??
+      "I couldn't generate a response.",
+
+    sources: retrievedChunks.map((chunk) => ({
+      title: chunk.documentTitle,
+      distance: chunk.distance,
+    })),
+  };
 }
