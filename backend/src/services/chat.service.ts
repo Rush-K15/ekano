@@ -1,5 +1,5 @@
 import ai from "../lib/ai.js";
-import { Message } from "../types/chat.types.js";
+import type { Message } from "../types/chat.types.js";
 import { retrieveKnowledge } from "./retriever.service.js";
 
 export async function generateResponse(messages: Message[]): Promise<string> {
@@ -9,10 +9,14 @@ export async function generateResponse(messages: Message[]): Promise<string> {
 
   const latestMessage = messages[messages.length - 1];
 
-  const context = await retrieveKnowledge(latestMessage.content);
+  const retrievedChunks = await retrieveKnowledge(latestMessage.content);
+
+  const context = retrievedChunks
+    .map((chunk) => `Source: ${chunk.documentTitle}\n${chunk.content}`)
+    .join("\n\n");
 
   const completion = await ai.chat.completions.create({
-    model: "nvidia/nemotron-3.5-lightning:free",
+    model: "nvidia/nemotron-3-super-120b-a12b:free",
 
     messages: [
       {
@@ -20,11 +24,17 @@ export async function generateResponse(messages: Message[]): Promise<string> {
         content: `
 You are Ekano, an Enterprise Knowledge Assistant.
 
-Answer the user's question using only the provided company knowledge.
+Answer questions using the provided company knowledge.
 
-If the company knowledge does not contain enough information to answer the question, clearly say that you don't have enough information.
-
-Do not use your general knowledge to invent or assume company-specific information.
+Rules:
+- Use company knowledge only when it is relevant to the user's question.
+- If the answer is present in the company knowledge, answer directly and accurately.
+- If the answer is not present in the company knowledge, say:
+  "I don't have enough information to answer that based on the available company knowledge."
+- Never invent or assume company policies.
+- Do not use general knowledge to answer company-specific questions.
+- Ignore retrieved context that is unrelated to the user's question.
+- Keep answers concise.
 
 Company Knowledge:
 

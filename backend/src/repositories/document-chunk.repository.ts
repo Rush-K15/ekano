@@ -41,16 +41,19 @@ export async function createDocumentChunk(chunk: CreateDocumentChunk) {
 export async function searchSimilarChunks(embedding: number[], limit: number) {
   const result = await pool.query(
     `
-        SELECT
-            id,
-            document_id,
-            content,
-            chunk_index,
-            embedding <=> $1::vector AS distance
-        FROM document_chunks
-        ORDER BY embedding <=> $1::vector
-        LIMIT $2
-        `,
+      SELECT
+        dc.id,
+        dc.document_id,
+        dc.content,
+        dc.chunk_index,
+        d.title AS document_title,
+        dc.embedding <=> $1::vector AS distance
+      FROM document_chunks dc
+      JOIN documents d
+        ON dc.document_id = d.id
+      ORDER BY dc.embedding <=> $1::vector
+      LIMIT $2
+    `,
     [`[${embedding.join(",")}]`, limit],
   );
 

@@ -21,7 +21,8 @@ for (const query of queries) {
 
   chunks.forEach((chunk, index) => {
     console.log(`\n--- Result ${index + 1} ---`);
-    console.log("Distance:", chunk.distance);
-    console.log("Content:", chunk.content);
+    console.log(`Document: ${chunk.documentTitle}`);
+    console.log(`Distance: ${chunk.distance}`);
+    console.log(`Content: ${chunk.content}`);
   });
 }
