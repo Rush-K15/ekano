@@ -1,12 +1,17 @@
 import crypto from "crypto";
 
-import { createDocument } from "../repositories/document.repository.js";
+import { createDocument, getAllDocuments } from "../repositories/document.repository.js";
 import { createDocumentChunk } from "../repositories/document-chunk.repository.js";
 import { createEmbedding } from "./embedding.service.js";
 
 import { chunkText } from "../utils/chunkText.js";
 
 import type { Document } from "../types/document.types.js";
+
+
+export async function getDocuments(): Promise<Document[]> {
+  return getAllDocuments();
+}
 
 export async function addDocument(
   title: string,

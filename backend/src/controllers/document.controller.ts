@@ -1,11 +1,19 @@
 import type { Request, Response } from "express";
 
-import { addDocument } from "../services/document.service.js";
+import { addDocument, getDocuments } from "../services/document.service.js";
 
 type CreateDocumentRequest = {
   title: string;
   content: string;
 };
+
+export async function getAllDocuments(request: Request, response: Response) {
+  const documents = await getDocuments();
+
+  response.status(200).json({
+    documents,
+  });
+}
 
 export async function createDocument(
   request: Request<{}, {}, CreateDocumentRequest>,

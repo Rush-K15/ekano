@@ -10,6 +10,10 @@ type CreateDocumentResponse = {
   document: Document;
 };
 
+type GetDocumentsResponse = {
+  documents: Document[];
+};
+
 export async function createDocument(
   title: string,
   content: string,
@@ -20,4 +24,10 @@ export async function createDocument(
   });
 
   return response.data.document;
+}
+
+export async function getDocuments(): Promise<Document[]> {
+  const response = await api.get<GetDocumentsResponse>("/documents");
+
+  return response.data.documents;
 }
