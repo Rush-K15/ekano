@@ -6,6 +6,8 @@ import {
   removeDocument,
 } from "../services/document.service.js";
 
+import { extractTextFromPdf } from "../services/pdf.service.js";
+
 type CreateDocumentRequest = {
   title: string;
   content: string;
@@ -59,5 +61,35 @@ export async function deleteDocument(
 
   response.status(200).json({
     message: "Document deleted successfully.",
+  });
+}
+
+export async function uploadDocument(request: Request, response: Response) {
+  if (!request.file) {
+    response.status(400).json({
+      message: "PDF file is required.",
+    });
+
+    return;
+  }
+
+  const content = await extractTextFromPdf(request.file.buffer);
+
+  if (!content) {
+    response.status(400).json({
+      message: "No readable text found in the PDF.",
+    });
+
+    return;
+  }
+
+  const title =
+    request.body.title?.trim() ||
+    request.file.originalname.replace(/\.pdf$/i, "");
+
+  const document = await addDocument(title, content);
+
+  response.status(201).json({
+    document,
   });
 }

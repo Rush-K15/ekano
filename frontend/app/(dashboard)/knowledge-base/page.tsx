@@ -9,8 +9,10 @@ import {
   createDocument,
   deleteDocument,
   getDocuments,
+  uploadDocument,
   type Document,
 } from "@/services/documents";
+import UploadPdfForm from "./UploadPdfForm";
 
 export default function KnowledgeBasePage() {
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -58,14 +60,19 @@ export default function KnowledgeBasePage() {
     }
   }
 
+  async function handleUploadDocument(file: File, title?: string) {
+    const document = await uploadDocument(file, title);
+
+    setDocuments((previousDocuments) => [...previousDocuments, document]);
+  }
+
   return (
     <div className="mx-auto w-full max-w-4xl p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white">Knowledge Base</h1>
 
         <p className="mt-2 text-zinc-400">
-          Add and manage company knowledge that Ekano can use to answer
-          questions.
+          Add company knowledge by uploading a PDF or entering text manually.
         </p>
       </div>
 
@@ -74,6 +81,17 @@ export default function KnowledgeBasePage() {
           {errorMessage}
         </div>
       )}
+      <UploadPdfForm onUpload={handleUploadDocument} />
+
+      <div className="my-6 flex items-center gap-4">
+        <div className="h-px flex-1 bg-zinc-800" />
+
+        <span className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+          Or
+        </span>
+
+        <div className="h-px flex-1 bg-zinc-800" />
+      </div>
 
       <AddDocumentForm onAdd={handleAddDocument} />
 

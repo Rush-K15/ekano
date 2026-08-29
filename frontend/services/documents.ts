@@ -39,3 +39,23 @@ export async function getDocuments(): Promise<Document[]> {
 
   return response.data.documents;
 }
+
+export async function uploadDocument(
+  file: File,
+  title?: string,
+): Promise<Document> {
+  const formData = new FormData();
+
+  formData.append("file", file);
+
+  if (title?.trim()) {
+    formData.append("title", title.trim());
+  }
+
+  const response = await api.post<CreateDocumentResponse>(
+    "/documents/upload",
+    formData,
+  );
+
+  return response.data.document;
+}
