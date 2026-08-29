@@ -14,6 +14,14 @@ type GetDocumentsResponse = {
   documents: Document[];
 };
 
+type DeleteDocumentResponse = {
+  message: string;
+};
+
+export async function deleteDocument(id: string): Promise<void> {
+  await api.delete<DeleteDocumentResponse>(`/documents/${id}`);
+}
+
 export async function createDocument(
   title: string,
   content: string,

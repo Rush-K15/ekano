@@ -53,3 +53,15 @@ export async function createDocument(document: Document): Promise<Document> {
 
   return result.rows[0];
 }
+
+export async function deleteDocumentById(id: string): Promise<boolean> {
+  const result = await pool.query(
+    `
+      DELETE FROM documents
+      WHERE id = $1
+    `,
+    [id],
+  );
+
+  return (result.rowCount ?? 0) > 0;
+}

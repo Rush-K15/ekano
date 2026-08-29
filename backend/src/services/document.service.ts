@@ -1,6 +1,10 @@
 import crypto from "crypto";
 
-import { createDocument, getAllDocuments } from "../repositories/document.repository.js";
+import {
+  createDocument,
+  getAllDocuments,
+  deleteDocumentById,
+} from "../repositories/document.repository.js";
 import { createDocumentChunk } from "../repositories/document-chunk.repository.js";
 import { createEmbedding } from "./embedding.service.js";
 
@@ -8,9 +12,12 @@ import { chunkText } from "../utils/chunkText.js";
 
 import type { Document } from "../types/document.types.js";
 
-
 export async function getDocuments(): Promise<Document[]> {
   return getAllDocuments();
+}
+
+export async function removeDocument(id: string): Promise<boolean> {
+  return deleteDocumentById(id);
 }
 
 export async function addDocument(
