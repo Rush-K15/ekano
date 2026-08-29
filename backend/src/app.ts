@@ -5,6 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import chatRoutes from "./routes/chat.routes.js";
 import documentRoutes from "./routes/document.routes.js";
+import { errorHandler } from "./middleware/error.middleware.js";
 
 const app = express();
 app.use(
@@ -25,5 +26,7 @@ app.use("/health", healthRoutes);
 app.use("/auth", authRoutes);
 app.use("/chat", chatRoutes);
 app.use("/documents", documentRoutes);
+
+app.use(errorHandler);
 
 export default app;

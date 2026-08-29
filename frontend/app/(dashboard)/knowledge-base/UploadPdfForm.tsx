@@ -1,6 +1,11 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import axios from "axios";
+import { useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const PDF_MIME_TYPE = "application/pdf";
 
 type UploadPdfFormProps = {
   onUpload: (file: File, title?: string) => Promise<void>;
@@ -11,6 +16,31 @@ export default function UploadPdfForm({ onUpload }: UploadPdfFormProps) {
   const [title, setTitle] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
+    const selectedFile = event.target.files?.[0];
+
+    setErrorMessage("");
+
+    if (!selectedFile) {
+      setFile(null);
+      return;
+    }
+
+    if (selectedFile.type !== PDF_MIME_TYPE) {
+      setFile(null);
+      setErrorMessage("Only PDF files are supported.");
+      return;
+    }
+
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      setFile(null);
+      setErrorMessage("PDF file must be 10 MB or smaller.");
+      return;
+    }
+
+    setFile(selectedFile);
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,6 +60,16 @@ export default function UploadPdfForm({ onUpload }: UploadPdfFormProps) {
       setTitle("");
     } catch (error) {
       console.error(error);
+
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data?.message;
+
+        if (typeof message === "string") {
+          setErrorMessage(message);
+          return;
+        }
+      }
+
       setErrorMessage("Failed to upload PDF. Please try again.");
     } finally {
       setIsUploading(false);
@@ -79,11 +119,8 @@ export default function UploadPdfForm({ onUpload }: UploadPdfFormProps) {
 
           <input
             type="file"
-            accept="application/pdf"
-            onChange={(event) => {
-              setFile(event.target.files?.[0] ?? null);
-              setErrorMessage("");
-            }}
+            accept={PDF_MIME_TYPE}
+            onChange={handleFileChange}
             className="sr-only"
           />
         </label>
