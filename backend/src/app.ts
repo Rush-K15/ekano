@@ -6,11 +6,12 @@ import cookieParser from "cookie-parser";
 import chatRoutes from "./routes/chat.routes.js";
 import documentRoutes from "./routes/document.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
+import { env } from "./config/env.js";
 
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: env.frontendUrl,
     credentials: true,
   }),
 );

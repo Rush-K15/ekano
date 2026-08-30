@@ -1,4 +1,4 @@
-CREATE TABLE document_chunks (
+CREATE TABLE IF NOT EXISTS document_chunks (
     id UUID PRIMARY KEY,
     document_id UUID NOT NULL,
     content TEXT NOT NULL,

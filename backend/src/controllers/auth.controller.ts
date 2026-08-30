@@ -4,6 +4,7 @@ import type { LoginRequest } from "../types/auth.types.js";
 
 import * as authService from "../services/auth.service.js";
 import { generateAccessToken } from "../utils/jwt.js";
+import { authCookieOptions } from "../config/cookie.js";
 
 export async function login(
   request: Request<{}, {}, LoginRequest>,
@@ -22,9 +23,7 @@ export async function login(
   const accessToken = generateAccessToken(user.id);
 
   response.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    ...authCookieOptions,
     maxAge: 24 * 60 * 60 * 1000,
   });
 
@@ -32,11 +31,7 @@ export async function login(
 }
 
 export async function logout(_request: Request, response: Response) {
-  response.clearCookie("accessToken", {
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-  });
+  response.clearCookie("accessToken", authCookieOptions);
 
   return response.status(200).json({
     message: "Logged out successfully.",
