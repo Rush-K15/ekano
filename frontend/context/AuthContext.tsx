@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
+
 import {
   login as loginService,
   logout as logoutService,
@@ -15,13 +16,21 @@ type User = {
 type AuthContextType = {
   user: User | null;
   loading: boolean;
-
   login: (email: string, password: string) => Promise<void>;
-
   logout: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+
+  return context;
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -32,7 +41,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const user = await loginService(email, password);
-
       setUser(user);
     } finally {
       setLoading(false);
@@ -50,5 +58,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     login,
     logout,
   };
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
