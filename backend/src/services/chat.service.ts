@@ -52,14 +52,18 @@ ${context || "No relevant company knowledge found."}
     ],
   });
 
+  const uniqueSources = Array.from(
+    new Map(
+      retrievedChunks.map((chunk) => [
+        chunk.documentTitle,
+        { title: chunk.documentTitle, distance: chunk.distance },
+      ]),
+    ).values(),
+  );
   return {
     response:
       completion.choices[0]?.message?.content ??
       "I couldn't generate a response.",
-
-    sources: retrievedChunks.map((chunk) => ({
-      title: chunk.documentTitle,
-      distance: chunk.distance,
-    })),
+    sources: uniqueSources,
   };
 }
