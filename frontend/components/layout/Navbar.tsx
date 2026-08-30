@@ -28,10 +28,11 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 border-b transition-all duration-300 ${isScrolled
+      className={`sticky top-0 z-50 border-b transition-all duration-300 ${
+        isScrolled
           ? "border-zinc-800 bg-zinc-950/70 backdrop-blur-sm"
           : "border-transparent bg-transparent"
-        }`}
+      }`}
     >
       <Container>
         <div className="flex items-center justify-between py-4">
@@ -45,15 +46,27 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden items-center gap-8 md:flex">
-            {navigation.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="text-sm font-medium text-zinc-400 transition-colors duration-200 hover:text-white"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navigation.map((item) =>
+              item.external ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium text-zinc-400 transition-colors duration-200 hover:text-white"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="text-sm font-medium text-zinc-400 transition-colors duration-200 hover:text-white"
+                >
+                  {item.label}
+                </Link>
+              ),
+            )}
           </div>
 
           {/* Mobile Navigation */}

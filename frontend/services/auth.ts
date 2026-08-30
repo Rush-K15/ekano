@@ -14,3 +14,6 @@ export async function login(
 
     return response.data;
 }
+export async function logout(): Promise<void> {
+  await api.post("/auth/logout");
+}

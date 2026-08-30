@@ -9,23 +9,24 @@ export default function Hero() {
           AI-Powered Enterprise Knowledge Platform
         </p>
 
-        <h1 className="text-6xl font-bold tracking-tight">
-          EKANO
-        </h1>
+        <h1 className="text-6xl font-bold tracking-tight">EKANO</h1>
 
-        <p className="mt-4 text-xl text-zinc-300">
-          Ask. Discover. Know.
-        </p>
+        <p className="mt-4 text-xl text-zinc-300">Ask. Discover. Know.</p>
 
         <p className="mt-8 max-w-2xl text-lg leading-8 text-zinc-400">
-          Securely search company documentation, technical designs,
-          and organizational knowledge using AI-powered retrieval.
+          Securely search company documentation, technical designs, and
+          organizational knowledge using AI-powered retrieval.
         </p>
 
         <div className="mt-10 flex gap-4">
-          <Button>Get Started</Button>
+          <Button href="/login">Get Started</Button>
 
-          <Button variant="secondary">
+          <Button
+            href="https://github.com/Rush-K15/ekano"
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="secondary"
+          >
             GitHub
           </Button>
         </div>

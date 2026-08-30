@@ -6,27 +6,39 @@ import * as authService from "../services/auth.service.js";
 import { generateAccessToken } from "../utils/jwt.js";
 
 export async function login(
-    request: Request<{}, {}, LoginRequest>,
-    response: Response
+  request: Request<{}, {}, LoginRequest>,
+  response: Response,
 ) {
-    const { email, password } = request.body;
+  const { email, password } = request.body;
 
-    const user = await authService.login(email, password);
+  const user = await authService.login(email, password);
 
-    if (!user) {
-        return response.status(401).json({
-            message: "Invalid email or password",
-        });
-    }
+  if (!user) {
+    return response.status(401).json({
+      message: "Invalid email or password",
+    });
+  }
 
-    const accessToken = generateAccessToken(user.id);
-    
-    response.cookie("accessToken", accessToken, {
+  const accessToken = generateAccessToken(user.id);
+
+  response.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: false,
     sameSite: "lax",
     maxAge: 24 * 60 * 60 * 1000,
-});
+  });
 
-    return response.status(200).json(user);
+  return response.status(200).json(user);
+}
+
+export async function logout(_request: Request, response: Response) {
+  response.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+  });
+
+  return response.status(200).json({
+    message: "Logged out successfully.",
+  });
 }

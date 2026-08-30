@@ -13,11 +13,14 @@ export default function CTA() {
           />
 
           <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button>
-              Get Started
-            </Button>
+            <Button href="/login">Get Started</Button>
 
-            <Button variant="secondary">
+            <Button
+              href="https://github.com/Rush-K15/ekano#readme"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="secondary"
+            >
               View Documentation
             </Button>
           </div>

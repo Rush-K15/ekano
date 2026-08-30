@@ -36,6 +36,10 @@ export function useChat() {
   }
 
   async function handleSend(content: string) {
+    if (isGenerating) {
+      return;
+    }
+
     setIsGenerating(true);
 
     const userMessage: Message = {

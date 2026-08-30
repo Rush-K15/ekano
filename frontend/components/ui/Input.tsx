@@ -1,14 +1,14 @@
-import { InputHTMLAttributes } from "react";
+import type { InputHTMLAttributes } from "react";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> { }
+type InputProps = InputHTMLAttributes<HTMLInputElement>;
 
 export default function Input({
-    className = "",
-    ...props
+  className = "",
+  ...props
 }: InputProps) {
-    return (
-        <input
-            className={`
+  return (
+    <input
+      className={`
         w-full
         rounded-xl
         border
@@ -23,7 +23,7 @@ export default function Input({
         focus:border-blue-500
         ${className}
       `}
-            {...props}
-        />
-    );
+      {...props}
+    />
+  );
 }

@@ -8,7 +8,7 @@ export const dashboardNavigation = [
     href: "/chat",
   },
   {
-    label: "Knowledge",
+    label: "Knowledge Base",
     href: "/knowledge-base",
   },
   {

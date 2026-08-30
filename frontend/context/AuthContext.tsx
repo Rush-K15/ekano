@@ -1,67 +1,54 @@
 "use client";
 
 import { createContext, useState } from "react";
-import { login as loginService } from "@/services/auth";
+import {
+  login as loginService,
+  logout as logoutService,
+} from "@/services/auth";
 
 type User = {
-    id: string;
-    name: string;
-    email: string;
+  id: string;
+  name: string;
+  email: string;
 };
 
 type AuthContextType = {
-    user: User | null;
-    loading: boolean;
+  user: User | null;
+  loading: boolean;
 
-    login: (
-        email: string,
-        password: string
-    ) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
 
-    logout: () => void;
+  logout: () => Promise<void>;
 };
 
-export const AuthContext =
-    createContext<AuthContextType | null>(null);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
 
-export function AuthProvider({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(false);
+  const login = async (email: string, password: string) => {
+    setLoading(true);
 
-    const login = async (
-        email: string,
-        password: string
-    ) => {
-        setLoading(true);
+    try {
+      const user = await loginService(email, password);
 
-        try {
-            const user = await loginService(email, password);
+      setUser(user);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            setUser(user);
+  const logout = async () => {
+    await logoutService();
+    setUser(null);
+  };
 
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const logout = () => {
-        setUser(null);
-    };
-
-    const value: AuthContextType = {
-        user,
-        loading,
-        login,
-        logout,
-    };
-    return (
-        <AuthContext.Provider value={value}>
-            {children}
-        </AuthContext.Provider>
-    );
-}    
+  const value: AuthContextType = {
+    user,
+    loading,
+    login,
+    logout,
+  };
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
